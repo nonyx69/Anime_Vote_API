@@ -27,18 +27,21 @@ final class AuthController extends AbstractController
             return $this->json(["status"=>"error","message"=>"email déjà utilisé"]);
         }
 
+
         $newUser = new User();
+
+        $salt = getenv('PASSWORD_SALT') ?: 'Boubou_Maxime';
 
         $newUser->setEmail($data["email"]);
         $newUser->setPseudo($data["pseudo"]);
 
-        $salt = md5("anime");
-        $hashedPassword = md5($salt . $data['password']);
-        $newUser->setSalt($salt);
+        $hashedPassword = md5($data['password'] . $salt);
         $newUser->setPassword($hashedPassword);
 
-        $token = md5(uniqid());
+        $random = bin2hex(random_bytes(16));
+        $token = hash('sha256', $data["email"] . $salt . $random);
         $newUser->setToken($token);
+        $newUser->setSalt($salt);
 
         $newUser->setRoles(["ROLE_USER"]);
 
@@ -71,8 +74,9 @@ final class AuthController extends AbstractController
             return $this->json(["status"=>"error", "message"=>"user not found"]);
         }
 
-        $salt = $user->getSalt();
-        if( md5($salt . ($data['password'])) === $user->getPassword()){
+        $salt = getenv('PASSWORD_SALT') ?: 'Boubou_Maxime';
+
+        if( md5(($data['password'] . $salt)) === $user->getPassword()){
             return $this->json([
                 "status"=>"ok",
                 "message"=>"login ok",
