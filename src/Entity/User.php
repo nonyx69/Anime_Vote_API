@@ -26,9 +26,8 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-//    #[ORM\Column(length: 255, nullable: true)]
-//    #[Groups(['user:sign'])]
-//    private ?string $token = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -40,20 +39,6 @@ class User
     {
         return $this->id;
     }
-
-//    #[ORM\Column(length: 255)]
-//    private ?string $salt = null;
-//
-//    public function getSalt(): ?string
-//    {
-//        return $this->salt;
-//    }
-//
-//    public function setSalt(string $salt): static
-//    {
-//        $this->salt = $salt;
-//        return $this;
-//    }
 
     public function getEmail(): ?string
     {
@@ -98,17 +83,17 @@ class User
         return $this;
     }
 
-//    public function getToken(): ?string
-//    {
-//        return $this->token;
-//    }
-//
-//    public function setToken(?string $token): static
-//    {
-//        $this->token = $token;
-//
-//        return $this;
-//    }
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
 
     public function getRoles(): array
     {

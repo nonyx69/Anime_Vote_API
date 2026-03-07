@@ -14,6 +14,10 @@ final class AuthController extends AbstractController
 {
     public function __construct(private UserRepository $userRepo){}
 
+    private function getSalt()
+    {
+        return md5($this->getParameter('app.password_salt'));
+    }
 
     #[Route('/user/sign', name: 'app_auth_sign', methods: ['POST'])]
     public function sign(Request $request, EntityManagerInterface $em): Response
@@ -28,10 +32,9 @@ final class AuthController extends AbstractController
             return $this->json(["status"=>"error","message"=>"email déjà utilisé"]);
         }
 
-
         $newUser = new User();
 
-        $salt = md5($this->getParameter('app.password_salt'));
+        $salt = $this->getSalt();
 
         $newUser->setEmail($data["email"]);
         $newUser->setPseudo($data["pseudo"]);
@@ -42,8 +45,7 @@ final class AuthController extends AbstractController
         $token = hash('sha256', $data["email"] . $salt  . uniqid());
         $newUser->setCreatedAt(new \DateTimeImmutable());
 
-//        $newUser->setToken($token);
-//        $newUser->setSalt($salt);
+        $newUser->setToken($token);
 
         $em->persist($newUser);
         $em->flush();
@@ -69,18 +71,15 @@ final class AuthController extends AbstractController
             return $this->json(["status"=>"error", "message"=>"user not found"]);
         }
 
-        $salt = md5($this->getParameter('app.password_salt'));
+        $salt = $this->getSalt();
 
         if( md5(($data['password'] . $salt)) === $user->getPassword()){
             return $this->json([
                 "status"=>"ok",
                 "message"=>"login ok",
-                "result"=>[
-                    "id"=>$user->getId(),
-                    "pseudo"=>$user->getPseudo(),
-                    "email"=>$user->getEmail(),
-                ]
-            ]);
+                "result"=> $user
+            ], 200, [], ['groups' => ['user:sign']]);
+
         } else {
             return $this->json(["status"=>"error", "message"=>"login failed, wrong password"]);
         }
@@ -106,11 +105,7 @@ final class AuthController extends AbstractController
         return $this->json([
             "status"=>"ok",
             "message"=>"connected",
-            "result"=>[
-                "id"=>$user->getId(),
-                "pseudo"=>$user->getPseudo(),
-                "email"=>$user->getEmail()
-            ]
-        ]);
+            "result"=> $user
+        ], 200, [], ['groups' => ['user:sign']]);
     }
 }
