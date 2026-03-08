@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Choix;
 use App\Entity\Questions;
 use App\Entity\Sondages;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,7 @@ final class AdminController extends AbstractController
 {
 
     #[Route('/api/admin/sondage', name: 'admin_sondage_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em, \App\Repository\UserRepository $userRepo): Response
+    public function create(Request $request, EntityManagerInterface $em,UserRepository $userRepo): Response
     {
 
         $token = $request->headers->get('Authorization');
@@ -28,7 +29,7 @@ final class AdminController extends AbstractController
 
         $user = $userRepo->findOneBy(['token' => $token]);
 
-        if (!$user || !in_array('ROLE_ADMIN', $user->getRoles())) {
+        if (!$user || !in_array('ROLE_ADMIN', $user->getRoles_admin())) {
             return $this->json([
                 'error' => 'acces refuse tu doit etre admin'
             ], 403);
