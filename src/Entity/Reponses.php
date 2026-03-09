@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use AllowDynamicProperties;
 use App\Repository\ReponsesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: ReponsesRepository::class)]
 class Reponses
 {
@@ -23,6 +25,9 @@ class Reponses
 
     #[ORM\Column(length: 255)]
     private ?string $idUser = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $message = null;
 
     public function getId(): ?int
     {
@@ -62,6 +67,17 @@ class Reponses
     {
         $this->idUser = $idUser;
 
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
         return $this;
     }
 }

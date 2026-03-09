@@ -100,6 +100,14 @@ class User
         return $this->roles;
 
     }
+
+    public function getRole(): array
+    {
+
+        return $this->roles;
+
+    }
+
     public function getRoles(): array
     {
 
