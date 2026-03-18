@@ -35,6 +35,9 @@ class User
     #[ORM\Column]
     private array $roles = [];
 
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $image_profil = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -131,6 +134,18 @@ class User
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getImageProfil(): ?string
+    {
+        return $this->image_profil;
+    }
+
+    public function setImageProfil(?string $image_profil): self
+    {
+        $this->image_profil = $image_profil;
+
         return $this;
     }
 }
