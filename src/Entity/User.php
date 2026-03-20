@@ -36,7 +36,8 @@ class User
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Groups(['user:sign'])]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_profil = null;
 
     public function getId(): ?int
