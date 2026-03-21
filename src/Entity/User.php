@@ -37,8 +37,8 @@ class User
     private array $roles = [];
 
     #[Groups(['user:sign'])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $image_profil = null;
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Profil $profil = null;
 
     public function getId(): ?int
     {
@@ -139,14 +139,19 @@ class User
         return $this;
     }
 
-    public function getImageProfil(): ?string
+    public function getProfil(): ?Profil
     {
-        return $this->image_profil;
+        return $this->profil;
     }
 
-    public function setImageProfil(?string $image_profil): self
+    public function setProfil(Profil $profil): static
     {
-        $this->image_profil = $image_profil;
+        // set the owning side of the relation if necessary
+        if ($profil->getUser() !== $this) {
+            $profil->setUser($this);
+        }
+
+        $this->profil = $profil;
 
         return $this;
     }
