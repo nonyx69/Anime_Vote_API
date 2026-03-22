@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Profil;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,6 +48,13 @@ final class AuthController extends AbstractController
 
         $newUser->setToken($token);
 
+        $newProfil = new Profil();
+        $newProfil->setImageProfil("");
+        $newProfil->setBio("Bienvenue sur Saiko rank");
+
+        $newProfil->setUser($newUser);
+
+        $em->persist($newProfil);
         $em->persist($newUser);
         $em->flush();
 
