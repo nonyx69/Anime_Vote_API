@@ -30,6 +30,7 @@ class User
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
 
+    #[Groups(['user:sign'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -146,13 +147,11 @@ class User
 
     public function setProfil(Profil $profil): static
     {
-        // set the owning side of the relation if necessary
         if ($profil->getUser() !== $this) {
             $profil->setUser($this);
         }
 
         $this->profil = $profil;
-
         return $this;
     }
 }
