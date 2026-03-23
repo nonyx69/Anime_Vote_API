@@ -47,7 +47,7 @@ final class AuthController extends AbstractController
         $newUser->setCreatedAt(new \DateTimeImmutable());
 
         $newUser->setToken($token);
-
+        $newUser->setRoles(['ROLE_USER']);
         $newProfil = new Profil();
         $newProfil->setImageProfil("");
         $newProfil->setBio("Bienvenue sur Saiko rank");

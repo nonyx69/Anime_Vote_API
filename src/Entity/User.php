@@ -34,6 +34,7 @@ class User
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[Groups(['user:sign'])]
     #[ORM\Column]
     private array $roles = [];
 
@@ -117,8 +118,10 @@ class User
     public function getRoles(): array
     {
 
-        $this->roles[] = "ROLE_USER";
         return $this->roles;
+        $this->roles[] = "ROLE_USER";
+
+        return array_unique($roles);
 
     }
 
