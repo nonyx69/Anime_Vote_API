@@ -27,6 +27,7 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[Groups(['user:sign'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
 
